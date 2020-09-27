@@ -6,5 +6,6 @@
 Future Improvements
 - Authorization and Access Control 
 - More unit test coverage	
+- Integration Tests
 - Improved logging to log request / response information
 - Currently the Car, Vehicle and VehicleType classes in Model folder are used by all 3 layers (Repository, Services and Controller) for simplicity. Hence any changes to these classes will affect the database. Therefore, it would be better to create a different set of classes to be used by the Services and Controllers 
