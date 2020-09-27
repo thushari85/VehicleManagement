@@ -39,6 +39,7 @@ namespace VehicleManagement.Controllers
         public ActionResult<Car> Add(CarDto newCar)
         {
             newCar.VehicleTypeID = _vehicleTypeService.GetAllVehicleTypes().First(t => t.Type.ToLower().Equals("car")).VehicleTypeID;
+            
             Car addedCar = _carService.AddCar(newCar);
             if (addedCar != null)
             {

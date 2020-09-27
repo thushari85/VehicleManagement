@@ -12,22 +12,24 @@ namespace VehicleManagement.Model.Dtos
         [Required(ErrorMessage = "Make is Required")]
         public string Make { get; set; }
         
-        [Required]
+        [Required(ErrorMessage = "Model is Required")]
         public string Model { get; set; }
         
-        [Required]
+        [Required(ErrorMessage = "VehicleTypeId is Required")]
         public int VehicleTypeID { get; set; } = 0;
         
-        [Required]
+        [Required(ErrorMessage = "Engine is Required")]
         public string Engine { get; set; }
         
-        [Required]
-        public int Doors { get; set; } = 5;
+        [Required(ErrorMessage = "Doors is Required")]
+        [Range(1,5, ErrorMessage = "Value for {0} must be between {1} and {2}")]
+        public int Doors { get; set; }
         
-        [Required]
-        public int Wheels { get; set; } = 4;
+        [Required(ErrorMessage = "Wheels is Required")]
+        [Range(1, 10, ErrorMessage = "Value for {0} must be between {1} and {2}")]
+        public int Wheels { get; set; }
         
-        [Required]
+        [Required(ErrorMessage = "BodyType is Required")]
         public string BodyType { get; set; }
     }
 }

@@ -59,28 +59,19 @@ namespace VehicleManagement.UnitTest.Controllers
         [Test]
         public void Get_WhenThereAreCars_ReturnsOkStatusCode()
         {
-            _carService.Setup(cs => cs.GetAllCars()).Returns(new List<Car> { _car }.AsEnumerable());
-            CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
-
-            IActionResult result = controller.Get();
-
-            Assert.That(result, Is.InstanceOf(typeof(OkObjectResult)));
-        }
-
-        [Test]
-        public void Get_WhenThereAreCars_ReturnsListOfCars()
-        {
             List<Car> expectedResult = new List<Car> { _car };
             _carService.Setup(cs => cs.GetAllCars()).Returns(expectedResult.AsEnumerable());
             CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
 
             IActionResult result = controller.Get();
-            object resultValue = (result as OkObjectResult).Value;
+            var resultValue = (result as OkObjectResult).Value;
+
+            Assert.That(result, Is.InstanceOf(typeof(OkObjectResult)));
             Assert.That(resultValue, Is.EqualTo(expectedResult));
         }
 
         [Test]
-        public void Add_WhenCalled_ReturnsCreatedStatusCode()
+        public void Add_WhenACarIsAddedWithAllRequiredData_ReturnsCreatedStatusCode()
         {
             CarDto newCar = new CarDto
             {
@@ -112,6 +103,27 @@ namespace VehicleManagement.UnitTest.Controllers
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(201, createdResult.StatusCode);
             Assert.That(createdResult.Value, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public void Add_CarAddedWithoutAllRequiredData_ReturnsBadRequestStatusCode()
+        {
+            CarDto incompleteNewCar = new CarDto
+            {
+                Model = "Yaris",
+                BodyType = "Hatchback",
+                Engine = "500CC",
+                Wheels = 4,
+                Doors = 3,
+                VehicleTypeID = _vehicleType.VehicleTypeID
+            };
+            CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
+            
+            var result = controller.Add(incompleteNewCar);
+            var code = result.Result as StatusCodeResult;
+
+            Assert.IsNotNull(code);
+            Assert.That(code.StatusCode, Is.EqualTo(500));
         }
     }
 }

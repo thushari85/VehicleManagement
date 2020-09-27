@@ -31,13 +31,16 @@ namespace VehicleManagement.UnitTest.Controllers
         [Test]
         public void Get_WhenThereAreVehicleTypes_ReturnsOkStatusCode()
         {
-            _vehicleTypeService.Setup(s => s.GetAllVehicleTypes()).Returns(new List<VehicleType>{ _vehicleType }.AsEnumerable());
+            List<VehicleType> expectedResult = new List<VehicleType> { _vehicleType };
+            _vehicleTypeService.Setup(s => s.GetAllVehicleTypes()).Returns(expectedResult.AsEnumerable());
             VehicleTypeController controller = new VehicleTypeController(_vehicleTypeService.Object);
             
             IActionResult result = controller.Get();
-            var OkResult = result as OkObjectResult;
+            var okResult = result as OkObjectResult;
+            var resultValue = okResult.Value;
             
             Assert.That(result, Is.InstanceOf(typeof(OkObjectResult)));
+            Assert.That(resultValue, Is.EqualTo(expectedResult));
             
         }
 
