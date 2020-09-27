@@ -24,7 +24,7 @@ namespace VehicleManagement.Controllers
         public IActionResult Get()
         {
             IEnumerable<VehicleType> vehicleTypes = _vehicleTypeService.GetAllVehicleTypes();
-            if(vehicleTypes.Count() > 0)
+            if (vehicleTypes.Count() > 0)
             {
                 return Ok(vehicleTypes);
             }

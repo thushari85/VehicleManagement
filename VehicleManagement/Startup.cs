@@ -7,8 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using VehicleManagement.Data;
 using VehicleManagement.Data.Contracts;
+using VehicleManagement.Logger;
 using VehicleManagement.Model.Extensions;
 using VehicleManagement.Services.CarService;
 using VehicleManagement.Services.VehicleTypeService;
@@ -19,6 +24,7 @@ namespace VehicleManagement
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "\\nlog.config"));
             Configuration = configuration;
         }
 
@@ -29,12 +35,16 @@ namespace VehicleManagement
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddSingleton<ILoggerManager, LoggerManager>();
+
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IVehicleTypeService, VehicleTypeService>();
             services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
+
+            services.ConfigureLoggerService();
 
             services.AddControllersWithViews();
 
@@ -46,19 +56,21 @@ namespace VehicleManagement
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                //app.UseExceptionHandler("/Error");
-                //// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
-                app.ConfigureExceptionHandler();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    //app.UseExceptionHandler("/Error");
+            //    //// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    //app.UseHsts();
+            //    app.ConfigureExceptionHandler(logger);
+            //}
+
+            app.ConfigureExceptionHandler(logger);
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
