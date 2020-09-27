@@ -7,6 +7,6 @@ namespace VehicleManagement.Data.Contracts
 {
     public interface IVehicleTypeRepository
     {
-        IEnumerable<VehicleType> GetAll();
+        Task<IEnumerable<VehicleType>> GetAll();
     }
 }

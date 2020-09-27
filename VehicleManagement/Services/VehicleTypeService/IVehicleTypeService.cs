@@ -8,6 +8,6 @@ namespace VehicleManagement.Services.VehicleTypeService
 {
     public interface IVehicleTypeService
     {
-        IEnumerable<VehicleType> GetAllVehicleTypes();
+        Task<IEnumerable<VehicleType>> GetAllVehicleTypes();
     }
 }

@@ -21,9 +21,9 @@ namespace VehicleManagement.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            IEnumerable<VehicleType> vehicleTypes = _vehicleTypeService.GetAllVehicleTypes();
+            IEnumerable<VehicleType> vehicleTypes = await _vehicleTypeService.GetAllVehicleTypes();
             if (vehicleTypes.Count() > 0)
             {
                 return Ok(vehicleTypes);

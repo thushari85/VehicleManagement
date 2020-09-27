@@ -25,9 +25,9 @@ namespace VehicleManagement.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            IEnumerable<Car> cars = _carService.GetAllCars();
+            IEnumerable<Car> cars = await _carService.GetAllCars();
             if (cars.Count() > 0)
             {
                 return Ok(cars);
@@ -36,11 +36,12 @@ namespace VehicleManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Car> Add(CarDto newCar)
+        public async Task<ActionResult<Car>> Add(CarDto newCar)
         {
-            newCar.VehicleTypeID = _vehicleTypeService.GetAllVehicleTypes().First(t => t.Type.ToLower().Equals("car")).VehicleTypeID;
+            var vehicleTypes = await _vehicleTypeService.GetAllVehicleTypes();
+            newCar.VehicleTypeID = vehicleTypes.First(t => t.Type.ToLower().Equals("car")).VehicleTypeID;
             
-            Car addedCar = _carService.AddCar(newCar);
+            Car addedCar = await _carService.AddCar(newCar);
             if (addedCar != null)
             {
                 return CreatedAtAction("Add", addedCar);

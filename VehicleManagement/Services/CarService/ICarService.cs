@@ -9,7 +9,7 @@ namespace VehicleManagement.Services.CarService
 {
     public interface ICarService
     {
-        IEnumerable<Car> GetAllCars();
-        Car AddCar(CarDto newCar);
+        Task<IEnumerable<Car>> GetAllCars();
+        Task<Car> AddCar(CarDto newCar);
     }
 }

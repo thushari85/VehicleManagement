@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Text;
 using NUnit.Framework;
 using Moq;
@@ -48,24 +49,24 @@ namespace VehicleManagement.UnitTest.Services.CarServiceTests
         }
 
         [Test]
-        public void GetAllCars_WhenCalled__ReturnAllCars()
+        public async Task GetAllCars_WhenCalled__ReturnAllCars()
         {
-            _carRepository.Setup(r => r.GetAll()).Returns(new List<Car> { _car }.AsEnumerable());
+            _carRepository.Setup(r => r.GetAll()).Returns(Task.FromResult(new List<Car> { _car }.AsEnumerable()));
             var carService = new CarService(_carRepository.Object, _mapper);
             List<Car> allCars = new List<Car>
             {
                 _car
             };
 
-            var result = carService.GetAllCars();
+            var result = await carService.GetAllCars();
 
             Assert.That(result, Is.EqualTo(allCars));
         }
 
         [Test]
-        public void AddCar_WhenCalled_ReturnAddedCar()
+        public async Task AddCar_WhenCalled_ReturnAddedCar()
         {
-            _carRepository.Setup(r => r.Add(_car)).Returns(_car);
+            _carRepository.Setup(r => r.Add(_car)).Returns(Task.FromResult(_car));
             var carService = new VehicleManagement.Services.CarService.CarService(_carRepository.Object, _mapper);
 
             CarDto newCar = new CarDto
@@ -78,7 +79,7 @@ namespace VehicleManagement.UnitTest.Services.CarServiceTests
                 Doors = 5
             };
 
-            var result = carService.AddCar(newCar);
+            var result = await carService.AddCar(newCar);
         }
     }
 }

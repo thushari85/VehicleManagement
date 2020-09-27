@@ -15,7 +15,6 @@ namespace VehicleManagement.Model.Dtos
         [Required(ErrorMessage = "Model is Required")]
         public string Model { get; set; }
         
-        [Required(ErrorMessage = "VehicleTypeId is Required")]
         public int VehicleTypeID { get; set; } = 0;
         
         [Required(ErrorMessage = "Engine is Required")]

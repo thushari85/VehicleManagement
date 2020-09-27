@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,16 +14,16 @@ namespace VehicleManagement.Data
         {
             _context = context;
         }
-        public Car Add(Car newCar)
+        public async Task<Car> Add(Car newCar)
         {
             _context.Cars.Add(newCar);
-            int savedNumber = _context.SaveChanges();
+            int savedNumber = await _context.SaveChangesAsync();
             return savedNumber > 0 ? newCar : null;
         }
 
-        public IEnumerable<Car> GetAll()
+        public async Task<IEnumerable<Car>> GetAll()
         {
-            return _context.Cars.ToList();
+            return await _context.Cars.ToListAsync();
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using VehicleManagement.Controllers;
 using VehicleManagement.Data;
 using VehicleManagement.Services.VehicleTypeService;
@@ -29,13 +30,13 @@ namespace VehicleManagement.UnitTest.Controllers
         }
 
         [Test]
-        public void Get_WhenThereAreVehicleTypes_ReturnsOkStatusCode()
+        public async Task Get_WhenThereAreVehicleTypes_ReturnsOkStatusCode()
         {
             List<VehicleType> expectedResult = new List<VehicleType> { _vehicleType };
-            _vehicleTypeService.Setup(s => s.GetAllVehicleTypes()).Returns(expectedResult.AsEnumerable());
+            _vehicleTypeService.Setup(s => s.GetAllVehicleTypes()).Returns(Task.FromResult(expectedResult.AsEnumerable()));
             VehicleTypeController controller = new VehicleTypeController(_vehicleTypeService.Object);
             
-            IActionResult result = controller.Get();
+            IActionResult result = await controller.Get();
             var okResult = result as OkObjectResult;
             var resultValue = okResult.Value;
             
@@ -45,12 +46,12 @@ namespace VehicleManagement.UnitTest.Controllers
         }
 
         [Test]
-        public void Get_WhenNoVehicleTypesAdded_ReturnsNoContentStatusCode()
+        public async Task Get_WhenNoVehicleTypesAdded_ReturnsNoContentStatusCode()
         {
-            _vehicleTypeService.Setup(s => s.GetAllVehicleTypes()).Returns(new List<VehicleType>{ }.AsEnumerable());
+            _vehicleTypeService.Setup(s => s.GetAllVehicleTypes()).Returns(Task.FromResult(new List<VehicleType>{ }.AsEnumerable()));
             VehicleTypeController controller = new VehicleTypeController(_vehicleTypeService.Object);
 
-            IActionResult result = controller.Get();
+            IActionResult result = await controller.Get();
 
             Assert.That(result, Is.InstanceOf(typeof(NoContentResult)));
         }

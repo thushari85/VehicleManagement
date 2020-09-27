@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using VehicleManagement.Data;
 using VehicleManagement.Data.Contracts;
 using VehicleManagement.Services.VehicleTypeService;
@@ -30,16 +30,16 @@ namespace VehicleManagement.UnitTest.Services.VehicleTypeServiceTest
         }
 
         [Test]
-        public void GetAllVehicleTypes_WhenCalled_ReturnAllVehicleTypes()
+        public async Task GetAllVehicleTypes_WhenCalled_ReturnAllVehicleTypes()
         {
-            _vehicleTypeRepository.Setup(r => r.GetAll()).Returns(new List<VehicleType> { _vehicleType }.AsEnumerable());
+            _vehicleTypeRepository.Setup(r => r.GetAll()).Returns(Task.FromResult(new List<VehicleType> { _vehicleType }.AsEnumerable()));
             var vehicleTypeService = new VehicleTypeService(_vehicleTypeRepository.Object);
             List<VehicleType> vehicleTypes = new List<VehicleType>
             {
                 _vehicleType
             };
 
-            var result = vehicleTypeService.GetAllVehicleTypes();
+            var result = await vehicleTypeService.GetAllVehicleTypes();
 
             Assert.That(result, Is.EqualTo(vehicleTypes));
         }

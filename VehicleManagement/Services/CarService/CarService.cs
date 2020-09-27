@@ -19,15 +19,15 @@ namespace VehicleManagement.Services.CarService
             _mapper = mapper;
         }
 
-        public IEnumerable<Car> GetAllCars()
+        public async Task<IEnumerable<Car>> GetAllCars()
         {
-            return _carRepository.GetAll();
+            return await _carRepository.GetAll();
         }
 
-        public Car AddCar(CarDto newCar)
+        public async Task<Car> AddCar(CarDto newCar)
         {
             Car car = _mapper.Map<Car>(newCar);
-            return _carRepository.Add(car);
+            return await _carRepository.Add(car);
         }
     }
 }

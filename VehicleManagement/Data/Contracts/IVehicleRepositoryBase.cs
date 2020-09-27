@@ -7,7 +7,7 @@ namespace VehicleManagement.Data.Contracts
 {
     public interface IVehicleRepositoryBase<T> where T : class
     {
-        IEnumerable<T> GetAll();
-        T Add(T entity);
+        Task<IEnumerable<T>> GetAll();
+        Task<T> Add(T entity);
     }
 }

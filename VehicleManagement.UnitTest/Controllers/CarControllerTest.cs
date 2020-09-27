@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using VehicleManagement.Controllers;
 using VehicleManagement.Data;
 using VehicleManagement.Model.Dtos;
@@ -31,7 +32,7 @@ namespace VehicleManagement.UnitTest.Controllers
                 VehicleTypeID = 1,
                 Type = "Car"
             };
-            _vehicleTypeService.Setup(vt => vt.GetAllVehicleTypes()).Returns(new List<VehicleType> { _vehicleType }.AsEnumerable());
+            _vehicleTypeService.Setup(vt => vt.GetAllVehicleTypes()).Returns(Task.FromResult(new List<VehicleType> { _vehicleType }.AsEnumerable()));
             _car = new Car
             {
                 ID = 1,
@@ -46,24 +47,24 @@ namespace VehicleManagement.UnitTest.Controllers
         }
 
         [Test]
-        public void Get_WhenNoCarsAdded_ReturnsNoContentStatusCode()
+        public async Task Get_WhenNoCarsAdded_ReturnsNoContentStatusCode()
         {
-            _carService.Setup(cs => cs.GetAllCars()).Returns(new List<Car> { }.AsEnumerable());
+            _carService.Setup(cs => cs.GetAllCars()).Returns(Task.FromResult(new List<Car> { }.AsEnumerable()));
             CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
 
-            IActionResult result = controller.Get();
+            IActionResult result = await controller.Get();
 
             Assert.That(result, Is.InstanceOf(typeof(NoContentResult)));
         }
 
         [Test]
-        public void Get_WhenThereAreCars_ReturnsOkStatusCode()
+        public async Task Get_WhenThereAreCars_ReturnsOkStatusCode()
         {
             List<Car> expectedResult = new List<Car> { _car };
-            _carService.Setup(cs => cs.GetAllCars()).Returns(expectedResult.AsEnumerable());
+            _carService.Setup(cs => cs.GetAllCars()).Returns(Task.FromResult(expectedResult.AsEnumerable()));
             CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
 
-            IActionResult result = controller.Get();
+            IActionResult result = await controller.Get();
             var resultValue = (result as OkObjectResult).Value;
 
             Assert.That(result, Is.InstanceOf(typeof(OkObjectResult)));
@@ -71,7 +72,7 @@ namespace VehicleManagement.UnitTest.Controllers
         }
 
         [Test]
-        public void Add_WhenACarIsAddedWithAllRequiredData_ReturnsCreatedStatusCode()
+        public async Task Add_WhenACarIsAddedWithAllRequiredData_ReturnsCreatedStatusCode()
         {
             CarDto newCar = new CarDto
             {
@@ -94,10 +95,10 @@ namespace VehicleManagement.UnitTest.Controllers
                 VehicleTypeID = _vehicleType.VehicleTypeID
             };
 
-            _carService.Setup(cs => cs.AddCar(newCar)).Returns(expectedResult);
+            _carService.Setup(cs => cs.AddCar(newCar)).Returns(Task.FromResult(expectedResult));
             CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
 
-            ActionResult result = controller.Add(newCar).Result;
+            ActionResult result = (await controller.Add(newCar)).Result;
             var createdResult = result as ObjectResult;
 
             Assert.IsNotNull(createdResult);
@@ -106,7 +107,7 @@ namespace VehicleManagement.UnitTest.Controllers
         }
 
         [Test]
-        public void Add_CarAddedWithoutAllRequiredData_ReturnsBadRequestStatusCode()
+        public async Task Add_CarAddedWithoutAllRequiredData_ReturnsBadRequestStatusCode()
         {
             CarDto incompleteNewCar = new CarDto
             {
@@ -119,7 +120,7 @@ namespace VehicleManagement.UnitTest.Controllers
             };
             CarController controller = new CarController(_carService.Object, _vehicleTypeService.Object);
             
-            var result = controller.Add(incompleteNewCar);
+            var result = await controller.Add(incompleteNewCar);
             var code = result.Result as StatusCodeResult;
 
             Assert.IsNotNull(code);

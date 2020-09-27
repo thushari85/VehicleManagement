@@ -17,12 +17,12 @@ class CarForm extends React.Component {
         }
     }
 
-    renderDropDown = ( {input, label, meta, maxNumber} ) => {
+    renderDropDown = ( {input, label, maxNumber} ) => {
         return(
             <div className="form-group">
                 <label>{label}</label>
-                <select className="form-control">
-                    {this.renderDropDownItems(maxNumber)}
+                <select className="form-control" {...input}>
+                   {this.renderDropDownItems(maxNumber)}
                 </select>
             </div>
         )
@@ -31,7 +31,7 @@ class CarForm extends React.Component {
     renderDropDownItems = (maxNumber) => {
         let options = [];
         for(let i=1; i < maxNumber + 1; i++) {
-            options.push(<option value={i}>{i}</option>)
+            options.push(<option key={i} value={i}>{i}</option>)
         }
         return options;
     }

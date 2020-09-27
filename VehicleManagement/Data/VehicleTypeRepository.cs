@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace VehicleManagement.Data
 {
@@ -14,9 +15,9 @@ namespace VehicleManagement.Data
         {
             _context = context;
         }
-        public IEnumerable<VehicleType> GetAll()
+        public async Task<IEnumerable<VehicleType>> GetAll()
         {
-            return _context.VehicleTypes.ToList();
+            return await _context.VehicleTypes.ToListAsync();
         }
     }
 }

@@ -15,9 +15,9 @@ namespace VehicleManagement.Services.VehicleTypeService
         {
             _vehicleTypeRepository = vehicleTypeRepository;
         }
-        public IEnumerable<VehicleType> GetAllVehicleTypes()
+        public async Task<IEnumerable<VehicleType>> GetAllVehicleTypes()
         {
-            return _vehicleTypeRepository.GetAll();
+            return await _vehicleTypeRepository.GetAll();
         }
     }
 }
